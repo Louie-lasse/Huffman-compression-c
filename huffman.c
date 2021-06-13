@@ -27,7 +27,7 @@ void compress(char* string)
 
 void main()
 {
-    char* string ="Text to be compressed";
+    char* string ="Text to be compressed via huffmancompression";
     compress(string);
 }
 
