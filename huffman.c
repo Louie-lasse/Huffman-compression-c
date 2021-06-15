@@ -24,24 +24,28 @@ typedef struct Bitfield{
     char* bits;
     char bitInChar;
     char endOfLastChar;
-    char numberOfChars;
+    short numberOfChars;
 }Bitfield;
 
+typedef struct Compressor{
+    Bitfield* bits;
+    Branch* branch;
+}Compressor;
 
-Bitfield compress(char* string)
+Compressor compress(char* string)
 {
 
 }
 
-char* uncompress(Bitfield bitfield){
+char* unCompress(Compressor compressor){
     return (char*) malloc(1);
 }
 
 void main()
 {
     char* string ="Text to be compressed via huffmancompression";
-    Bitfield bf = compress(string);
-    printf(unCompress(bf));
+    Compressor compressedString = compress(string);
+    printf(unCompress(compressedString));
 }
 
 
