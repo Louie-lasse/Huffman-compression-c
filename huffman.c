@@ -156,6 +156,7 @@ Branch* createTree(LinkedList* list){
             }
         }
         insert(list, combinedBranch(secondLast, last));
+        thirdLast->next = 0;
     }
 }
 
