@@ -137,6 +137,39 @@ LinkedList* createLinkedList(char* charCount){
     return tmp;
 }
 
+Branch* combinedBranch(Branch* b1, Branch* b2){
+    Branch* result = (Branch*) malloc(sizeof(Branch));
+    result->code = 0;
+    result->leftSubBranch = b1;
+    result->rightSubBranch = b2;
+    return result;
+}
+
+LinkedList* insert(LinkedList* list, Branch* item){
+    LinkedList* newListItem = (LinkedList*) malloc(sizeof(LinkedList));
+    newListItem->this = item;
+    newListItem->next = 0;
+    int branchValue = valueOf(*item);
+    if (!compare(item, list->this)<0){
+        newListItem->next = list;
+        return newListItem;
+    }
+    LinkedList* previous;
+    LinkedList* currentListItem = list;
+    do{
+        previous = currentListItem;
+        currentListItem = currentListItem->next;
+        if (previous->next == 0){
+            previous->next = newListItem;
+            return list;
+        }
+
+    } while(compare(item, currentListItem->this)<0);
+    previous->next = newListItem;
+    newListItem->next = currentListItem;
+    return list;
+}
+
 Branch* createTree(LinkedList* list){
     LinkedList* thirdLast;
     LinkedList* secondLast;
@@ -155,9 +188,13 @@ Branch* createTree(LinkedList* list){
                 thirdLast = thirdLast->next;
             }
         }
-        insert(list, combinedBranch(secondLast, last));
+        list = insert(list, combinedBranch(secondLast->this, last->this));
         thirdLast->next = 0;
     }
+}
+
+Branch* removeSemiNull(Branch* tree){
+
 }
 
 Compressor compress(char* string)
@@ -165,6 +202,7 @@ Compressor compress(char* string)
     char* charCount = countChars(string);
     LinkedList* list = createLinkedList(charCount);
     Branch* tree = createTree(list);
+    tree = removeSemiNull(tree);
 }
 
 char* unCompress(Compressor compressor){
