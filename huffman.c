@@ -10,7 +10,7 @@ typedef struct B{
     union {
         struct B* leftSubBranch;
         struct {
-            char leftAmount;
+            short leftAmount;
             char leftChar;
             char unusedLeft;
         };
@@ -194,15 +194,48 @@ Branch* createTree(LinkedList* list){
 }
 
 Branch* removeSemiNull(Branch* tree){
+    if (!(tree->code & leftHasChar)) {
+        if (tree->leftSubBranch->code & semiNull) {
+            Branch *leftTree = tree->leftSubBranch;
+            tree->leftAmount = leftTree->leftAmount;
+            tree->leftChar = leftTree->leftChar;
+            tree->code |= leftHasChar;
+            realloc(leftTree, 0);
+        } else {
+            removeSemiNull(tree->leftSubBranch);
+        }
+    }
+    if (!(tree->code & rightHasChar)) {
+        if (tree->rightSubBranch->code & semiNull) {
+            Branch *rightTree = tree->rightSubBranch;
+            tree->rightAmount = rightTree->leftAmount;
+            tree->rightChar = rightTree->leftChar;
+            tree->code |= rightHasChar;
+            realloc(rightTree, 0);
+        } else {
+            removeSemiNull(tree->rightSubBranch);
+        }
+    }
+}
 
+void displayItemTempFunction(Branch* item){
+    printf("%c: %_\n", item->leftChar, item->leftAmount);
+}
+
+void displayListTempFunction(LinkedList* list){
+    do {
+        displayItemTempFunction(list->this);
+        list = list->next;
+    } while (list!=0);
 }
 
 Compressor compress(char* string)
 {
     char* charCount = countChars(string);
     LinkedList* list = createLinkedList(charCount);
+    displayListTempFunction(list);
     Branch* tree = createTree(list);
-    tree = removeSemiNull(tree);
+    removeSemiNull(tree);
 }
 
 char* unCompress(Compressor compressor){
